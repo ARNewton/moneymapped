@@ -1333,16 +1333,17 @@ export default function App() {
               </p>
             </div>
 
-            {/* Monthly money flow — 2-col grid to avoid cramping on mobile */}
+            {/* Monthly money flow — fixed 4-item 2-col grid */}
             <div className="flow">
               <div className="flow-title">Monthly money flow</div>
               <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px 0'}}>
                 {[
-                  { l:'Gross income', v:fm(income/12),          s:'before tax'                  },
-                  { l:'Take-home',    v:fm(moAfter),             s:`${(tax.eff*100).toFixed(0)}% effective rate` },
-                  { l:'After living', v:fm(moAfter-spend),       s:`${fm(spend)}/mo expenses`    },
-                  ...(debts.length > 0 ? [{ l:'After debt', v:fm(Math.max(moAfter-spend-debtExtra,0)), s:`${fm(debtExtra)}/mo to debt` }] : []),
-                  { l:'To invest',    v:fm(avail),               s:`${fm(avail*12)}/yr`, highlight:true },
+                  { l:'Gross income', v:fm(income/12),    s:'before tax' },
+                  { l:'Take-home',    v:fm(moAfter),       s:`${(tax.eff*100).toFixed(0)}% effective rate` },
+                  { l: debts.length > 0 ? 'After bills & debt' : 'After living',
+                    v: debts.length > 0 ? fm(Math.max(moAfter-spend-debtExtra,0)) : fm(moAfter-spend),
+                    s: debts.length > 0 ? `${fm(spend)} living + ${fm(debtExtra)} debt` : `${fm(spend)}/mo expenses` },
+                  { l:'To invest', v:fm(avail), s:`${fm(avail*12)}/yr`, highlight:true },
                 ].map((item, i) => (
                   <div key={i} style={{ paddingLeft: i%2===1 ? '16px':'0', borderLeft: i%2===1 ? '1px solid #2D2922':'none' }}>
                     <div className="fs-l">{item.l}</div>
